@@ -17,10 +17,10 @@ function clearCanvas() {
  */
 function drawAxes() {
     ctx.beginPath();
-    ctx.moveTo(250, 0);
-    ctx.lineTo(250, 500);
-    ctx.moveTo(0, 250);
-    ctx.lineTo(500, 250);
+    ctx.moveTo(25, 0);
+    ctx.lineTo(25, 50);
+    ctx.moveTo(0, 25);
+    ctx.lineTo(50, 25);
     ctx.strokeStyle = 'gray';
     ctx.stroke();
 }
@@ -33,20 +33,24 @@ function drawAxes() {
  * @param {number} y1 - Ending y-coordinate.
  */
 function stepByStep(x0, y0, x1, y1) {
-    ctx.beginPath();
-    const dx = x1 - x0;
-    const dy = y1 - y0;
-    const steps = Math.max(Math.abs(dx), Math.abs(dy));
-    const xInc = dx / steps;
-    const yInc = dy / steps;
+    // Calculate the slope (k) and the y-intercept (b) of the line equation y = kx + b
+    const k = (y1 - y0) / (x1 - x0);
+    const b = y0 - k * x0;
+
+    // Determine the direction of x
+    const step = x0 < x1 ? 1 : -1;
+
+    // Draw the line
     let x = x0;
-    let y = y0;
-    for (let i = 0; i <= steps; i++) {
-        ctx.fillRect(Math.round(x) + 250, 250 - Math.round(y), 1, 1);
-        x += xInc;
-        y += yInc;
+    while (x !== x1) {
+        const y = Math.round(k * x + b);
+        ctx.fillRect(x + 25, 25 - y, 1, 1);
+        x += step;
     }
+    // Draw the last point
+    ctx.fillRect(x1 + 25, 25 - Math.round(k * x1 + b), 1, 1);
 }
+
 
 /**
  * Draws a line using the Digital Differential Analyzer (DDA) algorithm.
@@ -65,11 +69,12 @@ function dda(x0, y0, x1, y1) {
     let x = x0;
     let y = y0;
     for (let i = 0; i <= steps; i++) {
-        ctx.fillRect(Math.round(x) + 250, 250 - Math.round(y), 1, 1);
+        ctx.fillRect(Math.round(x) + 25, 25 - Math.round(y), 1, 1);
         x += xInc;
         y += yInc;
     }
 }
+
 
 /**
  * Draws a line using Bresenham's line algorithm.
@@ -87,7 +92,7 @@ function bresenham(x0, y0, x1, y1) {
     let err = dx - dy;
 
     while (true) {
-        ctx.fillRect(x0 + 250, 250 - y0, 1, 1);
+        ctx.fillRect(x0 + 25, 25 - y0, 1, 1);
         if (x0 === x1 && y0 === y1) break;
         const e2 = 2 * err;
         if (e2 > -dy) {
@@ -114,14 +119,14 @@ function bresenhamCircle(x0, y0, radius) {
     let err = 0;
 
     while (x >= y) {
-        ctx.fillRect(x0 + x + 250, 250 - (y0 + y), 1, 1);
-        ctx.fillRect(x0 + y + 250, 250 - (y0 + x), 1, 1);
-        ctx.fillRect(x0 - y + 250, 250 - (y0 + x), 1, 1);
-        ctx.fillRect(x0 - x + 250, 250 - (y0 + y), 1, 1);
-        ctx.fillRect(x0 - x + 250, 250 - (y0 - y), 1, 1);
-        ctx.fillRect(x0 - y + 250, 250 - (y0 - x), 1, 1);
-        ctx.fillRect(x0 + y + 250, 250 - (y0 - x), 1, 1);
-        ctx.fillRect(x0 + x + 250, 250 - (y0 - y), 1, 1);
+        ctx.fillRect(x0 + x + 25, 25 - (y0 + y), 1, 1);
+        ctx.fillRect(x0 + y + 25, 25 - (y0 + x), 1, 1);
+        ctx.fillRect(x0 - y + 25, 25 - (y0 + x), 1, 1);
+        ctx.fillRect(x0 - x + 25, 25 - (y0 + y), 1, 1);
+        ctx.fillRect(x0 - x + 25, 25 - (y0 - y), 1, 1);
+        ctx.fillRect(x0 - y + 25, 25 - (y0 - x), 1, 1);
+        ctx.fillRect(x0 + y + 25, 25 - (y0 - x), 1, 1);
+        ctx.fillRect(x0 + x + 25, 25 - (y0 - y), 1, 1);
 
         if (err <= 0) {
             y += 1;
