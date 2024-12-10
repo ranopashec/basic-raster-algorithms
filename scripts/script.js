@@ -1,11 +1,20 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+// Set the drawing color to neon pink
+ctx.fillStyle = '#ff69b4';
+
+/**
+ * Clears the canvas and redraws the axes.
+ */
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawAxes();
 }
 
+/**
+ * Draws the axes on the canvas.
+ */
 function drawAxes() {
     ctx.beginPath();
     ctx.moveTo(250, 0);
@@ -16,6 +25,13 @@ function drawAxes() {
     ctx.stroke();
 }
 
+/**
+ * Draws a line using the step-by-step algorithm.
+ * @param {number} x0 - Starting x-coordinate.
+ * @param {number} y0 - Starting y-coordinate.
+ * @param {number} x1 - Ending x-coordinate.
+ * @param {number} y1 - Ending y-coordinate.
+ */
 function stepByStep(x0, y0, x1, y1) {
     ctx.beginPath();
     const dx = x1 - x0;
@@ -32,6 +48,13 @@ function stepByStep(x0, y0, x1, y1) {
     }
 }
 
+/**
+ * Draws a line using the Digital Differential Analyzer (DDA) algorithm.
+ * @param {number} x0 - Starting x-coordinate.
+ * @param {number} y0 - Starting y-coordinate.
+ * @param {number} x1 - Ending x-coordinate.
+ * @param {number} y1 - Ending y-coordinate.
+ */
 function dda(x0, y0, x1, y1) {
     ctx.beginPath();
     const dx = x1 - x0;
@@ -48,6 +71,13 @@ function dda(x0, y0, x1, y1) {
     }
 }
 
+/**
+ * Draws a line using Bresenham's line algorithm.
+ * @param {number} x0 - Starting x-coordinate.
+ * @param {number} y0 - Starting y-coordinate.
+ * @param {number} x1 - Ending x-coordinate.
+ * @param {number} y1 - Ending y-coordinate.
+ */
 function bresenham(x0, y0, x1, y1) {
     ctx.beginPath();
     const dx = Math.abs(x1 - x0);
@@ -71,6 +101,12 @@ function bresenham(x0, y0, x1, y1) {
     }
 }
 
+/**
+ * Draws a circle using Bresenham's circle algorithm.
+ * @param {number} x0 - Center x-coordinate.
+ * @param {number} y0 - Center y-coordinate.
+ * @param {number} radius - Radius of the circle.
+ */
 function bresenhamCircle(x0, y0, radius) {
     ctx.beginPath();
     let x = radius;
@@ -89,15 +125,18 @@ function bresenhamCircle(x0, y0, radius) {
 
         if (err <= 0) {
             y += 1;
-            err += 2*y + 1;
+            err += 2 * y + 1;
         }
         if (err > 0) {
             x -= 1;
-            err -= 2*x + 1;
+            err -= 2 * x + 1;
         }
     }
 }
 
+/**
+ * Main function to draw the selected algorithm.
+ */
 function draw() {
     clearCanvas();
     const algorithm = document.getElementById('algorithm').value;
@@ -123,4 +162,5 @@ function draw() {
     }
 }
 
+// Initial draw of the axes
 drawAxes();
